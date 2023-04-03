@@ -9,6 +9,13 @@ class CsvReader {
     final lines = asr.LineSplitter().convert(contents);
 
     final header = lines[0].split(',');
+    
+    for (var i = 0; i < header.length; i++) {
+      if (header[i].endsWith('"')&&header[i].startsWith('"')) {
+        
+      }
+      header[i] = header[i].substring(1,header[i].length-1);
+    }
     final List<Map<String, dynamic>> data = [];
     
     for (var i = 1; i < lines.length; i++) {
@@ -42,20 +49,40 @@ class CsvReader {
     return mapp;
   }
 
-  static List<List<num>> todolist(
+   List<List<num>> todolist(
       List<String?> head, Map<String, List<dynamic>> objectt) {
     List<List<num>> x = [];
-    for (var i = 0; i < head.length; i++) {
+    for (var i = 0; i <  objectt[head[0]]!.length; i++) {
       List<num> xi = [];
-      print(head);
-      print(objectt.keys);
-      print(objectt);
-      print(objectt["sqft_lot15"]);
-      for (var j = 0; j < objectt[head[0]]!.length; j++) {
-        xi.add(num.parse(objectt[head[i]]![j]));
+      // print(head);
+      // print(objectt.keys);
+      // print(objectt);
+      // print(objectt["sqft_lot15"]);
+      for (var j = 0; j < head.length; j++) {
+        xi.add(num.parse(objectt[head[j]]![i]));
       }
       x.add(xi);
     }
     return x;
   }
+}
+  todolist(dynamic head, Map<String, List<dynamic>> objectt) {
+      if (head is List<String>) {  
+    List<List<num>> x = [];
+    for (var i = 0; i <  objectt[head[0]]!.length; i++) {
+      List<num> xi = [];
+      for (var j = 0; j < head.length; j++) {
+        xi.add(num.parse(objectt[head[j]]![i]));
+      }
+      x.add(xi);
+    }
+    return x;
+  }if (head is String) {
+    List<num> x = [];
+    for (var i = 0; i <  objectt[head]!.length; i++) {
+        x.add(num.parse(objectt[head]![i]));
+    }
+     return x;
+   }
+   return null;
 }

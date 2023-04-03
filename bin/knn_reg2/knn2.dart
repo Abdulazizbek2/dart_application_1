@@ -6,7 +6,7 @@ class KnnRegretion2 {
   int k;
   DataSet2? data;
   KnnRegretion2({this.k = 3});
-  void fit(List<List<double>> x, List<double> y) {
+  void fit(List<List<num>> x, List<num> y) {
     data = DataSet2(x, y);
   }
 
@@ -21,7 +21,7 @@ class KnnRegretion2 {
 
   List _predict(List<double> x) {
     int len = data!.x.length;
-    List<double> y_ = [...data!.y];
+    List<num> y_ = [...data!.y];
     // List<double> y_ = [];
     // y_.addAll(data!.y);
 
@@ -49,7 +49,7 @@ class KnnRegretion2 {
     return y_;
   }
 
-  double distance(List<double> x1, List<double> x2) {
+  double distance(List<num> x1, List<num> x2) {
     double sum = 0;
     for (int i = 0; i < x1.length; i++) {
       sum += pow(x1[i] - x2[i], 2);
