@@ -1,24 +1,26 @@
 import 'dart:convert' as asr;
 import 'dart:io' as ioo;
 
-class CsvReader {
-  static Future<List<Map<String, dynamic>>> readCsvFile(String filePath) async {
+class Pandas {
+ List<Map<String, dynamic>> dataList = [];
+  
+  Pandas(this.dataList);
+  static Future<Pandas> readCsvFile(String filePath ,{List<String>? head}) async {
     
     final file = ioo.File(filePath);
     final contents = await file.readAsString();
     final lines = asr.LineSplitter().convert(contents);
 
-    final header = lines[0].split(',');
+    final header =head??lines[0].split(',');
     
     for (var i = 0; i < header.length; i++) {
       if (header[i].endsWith('"')&&header[i].startsWith('"')) {
-        
+         header[i] = header[i].substring(1,header[i].length-1);
       }
-      header[i] = header[i].substring(1,header[i].length-1);
     }
     final List<Map<String, dynamic>> data = [];
     
-    for (var i = 1; i < lines.length; i++) {
+    for (var i = head == null ? 0 : 1; i < lines.length; i++) {
       final values = lines[i].split(',');
       final item = <String, dynamic>{};
 
@@ -30,7 +32,7 @@ class CsvReader {
       data.add(item);
     }
 
-    return data;
+    return Pandas(data);
   }
 
   static Map<String, List<dynamic>> convertlist(List<Map<String, dynamic>> ob) {
@@ -48,41 +50,24 @@ class CsvReader {
     // print(mapp);
     return mapp;
   }
-
-   List<List<num>> todolist(
-      List<String?> head, Map<String, List<dynamic>> objectt) {
+  value(dynamic head) {
+     final dataMap = convertlist(dataList);
+    if (head is List<String>) {  
     List<List<num>> x = [];
-    for (var i = 0; i <  objectt[head[0]]!.length; i++) {
-      List<num> xi = [];
-      // print(head);
-      // print(objectt.keys);
-      // print(objectt);
-      // print(objectt["sqft_lot15"]);
-      for (var j = 0; j < head.length; j++) {
-        xi.add(num.parse(objectt[head[j]]![i]));
-      }
-      x.add(xi);
-    }
-    return x;
-  }
-}
-  todolist(dynamic head, Map<String, List<dynamic>> objectt) {
-      if (head is List<String>) {  
-    List<List<num>> x = [];
-    for (var i = 0; i <  objectt[head[0]]!.length; i++) {
+    for (var i = 0; i <  dataMap[head[0]]!.length; i++) {
       List<num> xi = [];
       for (var j = 0; j < head.length; j++) {
-        xi.add(num.parse(objectt[head[j]]![i]));
+        xi.add(num.parse(dataMap[head[j]]![i]));
       }
       x.add(xi);
     }
     return x;
   }if (head is String) {
     List<num> x = [];
-    for (var i = 0; i <  objectt[head]!.length; i++) {
-        x.add(num.parse(objectt[head]![i]));
+    for (var i = 0; i <  dataMap[head]!.length; i++) {
+        x.add(num.parse(dataMap[head]![i]));
     }
      return x;
    }
    return null;
-}
+}}
