@@ -20,7 +20,7 @@ class Pandas {
     }
     final List<Map<String, dynamic>> data = [];
     
-    for (var i = head == null ? 0 : 1; i < lines.length; i++) {
+    for (var i = head == null ? 1 : 0; i < lines.length; i++) {
       final values = lines[i].split(',');
       final item = <String, dynamic>{};
 
@@ -50,11 +50,11 @@ class Pandas {
     // print(mapp);
     return mapp;
   }
-  value(dynamic head) {
+  value(dynamic head,{int? len}) {
      final dataMap = convertlist(dataList);
     if (head is List<String>) {  
     List<List<num>> x = [];
-    for (var i = 0; i <  dataMap[head[0]]!.length; i++) {
+    for (var i = 0; i <  (len ?? dataMap[head[0]]!.length); i++) {
       List<num> xi = [];
       for (var j = 0; j < head.length; j++) {
         xi.add(num.parse(dataMap[head[j]]![i]));
